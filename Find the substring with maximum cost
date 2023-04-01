@@ -1,0 +1,46 @@
+/*
+Example 1:
+
+Input: s = "adaa", chars = "d", vals = [-1000]
+Output: 2
+Explanation: The value of the characters "a" and "d" is 1 and -1000 respectively.
+The substring with the maximum cost is "aa" and its cost is 1 + 1 = 2.
+It can be proven that 2 is the maximum cost.
+Example 2:
+
+Input: s = "abc", chars = "abc", vals = [-1,-1,-1]
+Output: 0
+Explanation: The value of the characters "a", "b" and "c" is -1, -1, and -1 respectively.
+The substring with the maximum cost is the empty substring "" and its cost is 0.
+It can be proven that 0 is the maximum cost.
+
+*/
+
+
+
+class Solution {
+public:
+    int maximumCostSubstring(string s, string chars, vector<int>& vals) {
+        vector<int> cost(26);
+        for(int i=0;i<26;i++)
+        {
+            cost[i] = i+1;
+        }
+        
+        for(int i=0;i<vals.size();i++)
+        {
+            cost[chars[i]-'a'] = vals[i];
+        }
+        
+        int ans = 0;
+        int temp = 0 ;
+        for(int i=0;i<s.size();i++)
+        {
+            if(temp<0)
+                temp = 0;
+            temp += cost[s[i]-'a'];
+            ans = std::max(ans,temp);
+        }
+        return ans;
+    }
+};
