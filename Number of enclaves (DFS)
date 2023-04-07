@@ -1,0 +1,53 @@
+class Solution {
+public:
+    
+    void dfs(int i,int j,vector<vector<int>>& grid)
+        {
+            if(i<0 || j<0 || i==grid.size() || j==grid[0].size() || grid[i][j] == 0)
+            return;
+
+            if(grid[i][j] == 1)
+            grid[i][j] = 0;
+
+            dfs(i+1,j,grid);  // top
+            dfs(i-1,j,grid);  // left
+            dfs(i,j+1,grid);  // right
+            dfs(i,j-1,grid);  // bottom
+        }
+    int numEnclaves(vector<vector<int>>& grid) {
+        int r = grid.size();
+        int c = grid[0].size();
+        int count =0;
+        
+        for(int i=0;i<r;i++)
+        {
+            if(i==0 || i==r-1)
+            {
+                for(int j=0;j<c;j++)
+                {
+                    if(grid[i][j] == 1)
+                    {
+                        dfs(i,j,grid);
+                    }
+                }
+            }
+            else
+            {
+                if(grid[i][0] == 1)
+                dfs(i,0,grid);
+
+                if(grid[i][c-1]==1)
+                dfs(i,c-1,grid);
+            }
+        }
+        for(int i=0;i<r;i++)
+        {
+            for(int j=0;j<c;j++)
+            {
+                if(grid[i][j]==1)
+                count++;
+            }
+        }
+        return count;
+    }
+};
