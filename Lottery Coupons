@@ -1,0 +1,38 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+
+int fun(int n)
+{
+    map<int,int> mp;
+    for(int i=1;i<=n;i++)
+    {
+       int p = i;
+       int s = 0;
+       while(p)
+       {
+           s += p%10;
+           p = p/10;
+       }
+        mp[s]++;
+    }
+    int m = 0;
+    for(auto x:mp)
+    {
+        m = max(m,x.second);
+    }
+    int ans = 0;
+    for(auto x:mp)
+    {
+        if(m == x.second)
+        ans++;
+    }
+    return ans;
+}
+int main()
+{
+    int n;
+    cin>>n;
+    n = fun(n);
+    cout<<n;
+}
