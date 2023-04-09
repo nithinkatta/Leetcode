@@ -1,0 +1,32 @@
+class Solution:
+    def largestPathValue(self, colors: str, edges: List[List[int]]) -> int:
+        
+        ad = defaultdict(list)
+        for i,j in edges:
+            ad[i].append(j)
+
+        def dfs(node):
+            if node in path:
+                return float("inf")
+            if node in visit:
+                return 0
+            visit.add(node)
+            path.add(node)
+
+            i = ord(colors[node])-ord('a')
+            count[node][i] = 1
+            for j in ad[node]:
+                if dfs(j) == float("inf"):
+                    return float("inf")
+                for c in range(26):
+                    count[node][c] = max(count[node][c],
+                    (1 if c==i else 0) +count[j][c])
+            path.remove(node)
+            return max(count[node])
+        
+        n,r = len(colors),0
+        visit,path = set(),set()
+        count = [[0]*26 for i in range(n)]
+        for i in range(n):
+            r = max(dfs(i),r)
+        return -1 if r==float("inf") else r
