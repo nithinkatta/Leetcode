@@ -1,0 +1,14 @@
+class Solution {
+public:
+    int hammingWeight(uint32_t a) {
+        // string s = to_string(n);
+        // unsigned int a = stoi(s,0,10);
+        int c=0;
+        while(a)
+        {
+            a = a&(a-1);
+            c++;
+        }
+        return c;
+    }
+};
