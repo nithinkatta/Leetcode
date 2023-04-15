@@ -1,0 +1,40 @@
+class Solution {
+    
+    public int maxValueOfCoins(List<List<Integer>> piles, int k) {
+    
+    int[][] d = new int[piles.size()+1][k+1];
+    
+    for( int i = 0; i < d.length; i++ ) Arrays.fill(d[i], -1);
+    
+    return find (0, k, piles, d);
+    
+}
+
+private int find ( int i, int k, List<List<Integer>> piles, int[][] dp ){
+    
+    if( k == 0 ) return 0;
+           
+    if( i >= piles.size() ) {
+        return Integer.MIN_VALUE;
+    }
+    
+    if( dp[i][k] != -1 ) return dp[i][k];
+    
+    int take = Integer.MIN_VALUE, currSum = 0;
+    
+    for( int j = 0; j < piles.get(i).size(); j++ ){
+        
+        currSum += piles.get(i).get(j);
+        
+        if( k-j-1 >= 0 ){
+            take = Math.max(take, currSum + find(i+1, k-j-1, piles, dp));
+        }
+                            
+    }
+    
+    int notTake = find(i+1, k, piles, dp);
+    
+    return dp[i][k] = Math.max(take, notTake);
+    
+}
+    }
