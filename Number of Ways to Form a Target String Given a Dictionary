@@ -1,0 +1,11 @@
+class Solution:
+    def numWays(self, words: List[str], target: str) -> int:
+        n, m = len(words[0]), len(target)
+        d = [1] + [0]*m
+        c = [Counter(_) for _ in list(zip(*words))]
+        
+        for i in range(n):
+            for j in range(m-1, -1, -1):
+                d[j+1] += d[j] * c[i][target[j]]
+                d[j+1] %= 10**9 + 7
+        return d[m]
