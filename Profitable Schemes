@@ -1,0 +1,28 @@
+class Solution:
+    mod = 1000000007
+    memo = [[[0 for _ in range(101)] for _ in range(101)] for _ in range(101)]
+    def find(self, pos: int, count: int, profit: int, n: int, minProfit: int, group: List[int], profits: List[int]) -> int:
+        if pos == len(group):
+            # If profit exceeds the minimum required; it's a profitable scheme.
+            return 1 if profit >= minProfit else 0
+
+        if self.memo[pos][count][profit] != -1:
+            # Repeated subproblem, return the stored answer.
+            return self.memo[pos][count][profit]
+
+        # Ways to get a profitable scheme without this crime.
+        totalWays = self.find(pos + 1, count, profit, n, minProfit, group, profits)
+        if count + group[pos] <= n:
+            # Adding ways to get profitable schemes, including this crime.
+            totalWays += self.find(pos + 1, count + group[pos], min(minProfit, profit + profits[pos]), n, minProfit, group, profits)
+
+        self.memo[pos][count][profit] = totalWays % self.mod
+        return self.memo[pos][count][profit]
+
+    def profitableSchemes(self, n: int, minProfit: int, group: List[int], profit: List[int]) -> int:
+        # Initializing all states as -1.
+        for i in range(len(group) + 1):
+            for j in range(n + 1):
+                self.memo[i][j] = [-1] * (minProfit + 1)
+
+        return self.find(0, 0, 0, n, minProfit, group, profit)
