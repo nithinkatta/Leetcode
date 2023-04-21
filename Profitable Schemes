@@ -1,28 +1,46 @@
 class Solution:
-    mod = 1000000007
-    memo = [[[0 for _ in range(101)] for _ in range(101)] for _ in range(101)]
-    def find(self, pos: int, count: int, profit: int, n: int, minProfit: int, group: List[int], profits: List[int]) -> int:
-        if pos == len(group):
-            # If profit exceeds the minimum required; it's a profitable scheme.
-            return 1 if profit >= minProfit else 0
+    def profitableSchemes(self, G, P, group, profit):
+        dp = [[0] * (G + 1) for i in range(P + 1)]
+        dp[0][0] = 1
+        for p, g in zip(profit, group):
+            for i in range(P, -1, -1):
+                for j in range(G - g, -1, -1):
+                    dp[min(i + p, P)][j + g] += dp[i][j]
+                # for j in range(G, g, -1):
+                #     dp[min(i + p, P)][j] += dp[i][j - g]
+        return sum(dp[P]) % (10**9 + 7)
+        '''
+        knapsack with 2d knapsack (profit, members):
+            first we  consider a crime with (p, g)
+            then we want to know the knapsacks we could have with a profit (P, G) 
+            using what we already could make for x < P and y < G
 
-        if self.memo[pos][count][profit] != -1:
-            # Repeated subproblem, return the stored answer.
-            return self.memo[pos][count][profit]
+            usually the knap constraint is 'exactly' or 'at most',
+            here we can use at most n members, but the profit P must be at least P
 
-        # Ways to get a profitable scheme without this crime.
-        totalWays = self.find(pos + 1, count, profit, n, minProfit, group, profits)
-        if count + group[pos] <= n:
-            # Adding ways to get profitable schemes, including this crime.
-            totalWays += self.find(pos + 1, count + group[pos], min(minProfit, profit + profits[pos]), n, minProfit, group, profits)
+            what we can do then is count all knaps (P, y<=n)
 
-        self.memo[pos][count][profit] = totalWays % self.mod
-        return self.memo[pos][count][profit]
+            one way we can thinkg about each crime is being a knap (scheme) itself,
+            since a crime has the same dimensions and type as the knap
 
-    def profitableSchemes(self, n: int, minProfit: int, group: List[int], profit: List[int]) -> int:
-        # Initializing all states as -1.
-        for i in range(len(group) + 1):
-            for j in range(n + 1):
-                self.memo[i][j] = [-1] * (minProfit + 1)
+            A 3d dp structure would store the schemes we could make with an additional crime c, 
+            and all existing schemes (p<=P, g<=G), and where c could fit into these
 
-        return self.find(0, 0, 0, n, minProfit, group, profit)
+            to save memory, we can iterate backwards to update bigger knaps first,
+            this ensures that the new scheme including c does not count the use of c twice
+            in a 3D version, we wouldnt worry about this because we'd be looking at the table of crime b, b<c
+            
+        '''
+        G = len(group)
+        mod = 10**9 + 7
+        dp = [[0 for j in range(n+1)] for i in range(mp+1)]
+        dp[0][0] = 1
+        for p in range(1, mp+1):
+            for i in range(1, n+1):
+                for g in range(G):
+                    if group[g] <= i and profit[g] <= p:
+                        dp[p][i] += dp[p-profit[g]][i-group[g]]
+                        dp[p][i] %= mod
+                    # else: 
+                    #     dp[p][i] = 
+        return sum(dp[mp]) % mod
