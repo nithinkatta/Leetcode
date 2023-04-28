@@ -1,0 +1,77 @@
+// class Solution {
+// public:
+//     int ans =0;
+//     int dfs(int p,string s,int k,int j,vector<string>& strs)
+//     {
+//         if(j>=s.size())
+//         return 0;
+
+//         char temp = s[k];
+//         s[k] = s[j];
+//         s[j] = temp;
+
+        
+//         int c = 0;
+//         for(int i=p;i<strs.size();i++)
+//         {
+//             if(i==p)
+//             continue;
+
+//             if(s==strs[i])
+//             c++;
+//         }
+
+//         cout<<s<<endl;
+//         c += dfs(p,s,k,j+1,strs);
+//         return c;
+//     }
+//     int numSimilarGroups(vector<string>& strs) {
+//         for(int i=0;i<strs.size();i++)
+//         {
+//             for(int j=0;j<strs.size();j++)
+//             {
+//                 if(i==j)
+//                 continue;
+
+//                 if(strs[i]==strs[j])
+//                 ans++;
+//             }
+//             for(int k=0;k<strs[i].size();k++)
+//             ans += dfs(i,strs[i],k,k+1,strs);
+//         }
+//         return ans;
+//     }
+// };
+
+class Solution {
+public:
+    int numSimilarGroups(vector<string>& strs) {
+        int g = 0, n = strs.size();
+        vector<bool> vis(n, false);
+        for(int i=0;i<strs.size();i++){
+            if(vis[i]) continue;
+            g++;
+            dfs(i, strs, vis);
+        }
+        return g;
+    }
+
+    void dfs(int i, vector<string>& strs, vector<bool>& vis){
+        vis[i] = true;
+        for(int j=0;j<strs.size();j++){
+            if(vis[j]) continue;
+            if(is_similar(strs[i], strs[j])){
+                dfs(j, strs, vis);
+            }
+        }
+    }
+
+    bool is_similar(string a, string b){
+        int count=0;
+        for(int i=0; i<a.length(); i++){
+            if(a[i] != b[i]) count++;
+        }
+        return (count == 2 || count == 0);
+    }
+
+};
