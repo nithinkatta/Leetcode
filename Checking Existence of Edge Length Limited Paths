@@ -1,0 +1,33 @@
+class Solution:
+    def distanceLimitedPathsExist(self, n: int, edgeList: List[List[int]], queries: List[List[int]]) -> List[bool]:
+        p = list(range(n))
+
+        def find(x):
+            if p[x]!=x:
+                p[x] = find(p[x])
+
+            return p[x]
+
+        def union(x,y):
+            a = find(x)
+            b = find(y)
+
+            if a!=b:
+                p[b] = a
+        
+        edgeList.sort(key=lambda x:x[2])
+
+        q = [(l,u,v,i) for i,(u,v,l) in enumerate(queries)]
+        q.sort()
+        n = len(queries)
+        ans = [False]*n
+        edge_size = len(edgeList)
+        edge_index = 0
+
+        for q_list, u,v,l in q:
+            while edge_index < edge_size and edgeList[edge_index][2] <q_list:
+                union(edgeList[edge_index][0],edgeList[edge_index][1])
+                edge_index += 1
+            ans[l] = (find(u)==find(v))
+        
+        return ans
