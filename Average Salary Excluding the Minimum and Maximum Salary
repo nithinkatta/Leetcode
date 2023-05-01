@@ -1,0 +1,12 @@
+class Solution:
+    def average(self, salary: List[int]) -> float:
+        m = min(salary)
+        salary.remove(m)
+        x = max(salary)
+        salary.remove(x)
+
+        s = 0
+        for i in salary:
+            s += i
+
+        return s/len(salary)
