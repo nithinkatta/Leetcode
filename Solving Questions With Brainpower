@@ -1,0 +1,37 @@
+class Solution {
+public:
+    // long long dfs(int i,vector<vector<int>>& questions,long long s)
+    // {
+    //     if(i>=questions.size())
+    //     return s;
+
+
+    //     s += questions[i][0];
+
+    //     s = dfs(i+questions[i][1]+1,questions,s);
+    //     return s;
+    // }
+    // long long mostPoints(vector<vector<int>>& questions) {
+        
+    //     long long ans = 0;
+
+    //     for(int i=0;i<questions.size();i++)
+    //     {
+    //         ans = max(ans,dfs(i,questions,0ll));
+    //     }
+    //     return ans;
+    // }
+    long long mostPoints(vector<vector<int>>& questions) {
+        int s = questions.size();
+        vector<long long int> dp(questions.size()+1,0);
+        for(int i=questions.size()-1;i>=0;i--)
+        {
+            int p = questions[i][0];
+            int j = questions[i][1];
+
+            int n = min(s,i+j+1);
+            dp[i] = max(dp[i+1],p + dp[n]);
+        }
+        return dp[0];
+    }
+};
