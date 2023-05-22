@@ -1,0 +1,18 @@
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        l = []
+        d = {}
+        for i in set(nums):
+            d[i] = nums.count(i)
+        
+        temp = sorted((v,k) for (k,v) in d.items())
+        d = dict([(k,v) for v,k in temp])
+
+        p = list(d.keys())
+        p.reverse()
+        j = 0
+        while k!=0:
+            l.append(p[j])
+            j+=1
+            k-=1
+        return l
