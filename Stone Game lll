@@ -1,0 +1,31 @@
+class Solution {
+public:
+    string stoneGameIII(vector<int>& stone) {
+        int n=stone.size();
+       // vector<int>dp(n+1,-1e9);
+       // dp[n]=0;
+        int i=n-1;
+        int v[3];
+        v[0]=0;
+        int total=INT_MIN;
+        while(i>=0){
+            int ans=0;
+            total=INT_MIN;
+            for(int j=0;j<3 && i+j<n;j++)
+            {
+                ans+=stone[i+j];
+                //if(i+j+1<n)
+                total=max(total,ans-v[j]);
+               // else dp[i]=max(dp[i],ans);
+            }
+            v[2]=v[1];
+            v[1]=v[0];
+            v[0]=total;
+            i--;
+        }
+        int ts=v[0];
+        if(ts>0)return "Alice";
+        else if(ts==0)return "Tie";
+        return "Bob";
+    }
+};
