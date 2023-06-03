@@ -1,0 +1,16 @@
+class Solution:
+    def numOfMinutes(self, n: int, headID: int, manager: List[int], informTime: List[int]) -> int:
+        d = defaultdict(list)
+        for i in range(n):
+            if manager[i]!=-1:
+                d[manager[i]].append(i)
+        print(d)
+
+        def dfs(h,it,mapp):
+            cost = 0
+            for i in mapp[h]:
+                cost = max(cost,dfs(i,it,mapp))
+            return cost+it[h]
+
+
+        return dfs(headID,informTime,d)
